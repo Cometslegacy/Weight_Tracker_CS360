@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DavidGerardiWeightTracker</string>
+    <string name="enable_sms">Would you like to Enable SMS notifications?</string>
+</resources>
