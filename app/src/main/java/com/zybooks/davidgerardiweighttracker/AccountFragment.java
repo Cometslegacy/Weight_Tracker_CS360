@@ -103,6 +103,8 @@ public class AccountFragment extends Fragment {
         }
     }
 
+    //TODO SMS verification
+    //This doesnt seem to be working, come back later.
     private void sendSms(String phoneNumber, String message) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
