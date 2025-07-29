@@ -12,10 +12,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -95,9 +97,20 @@ public class AccountFragment extends Fragment {
             requestPermissions(
                     new String[]{Manifest.permission.SEND_SMS},
                     SMS_PERMISSION_CODE);
+            sendSms("1234567890", "SMS Enabled!");
         } else {
             // Permission already granted — continue with SMS functionality
         }
     }
 
+    private void sendSms(String phoneNumber, String message) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            Toast.makeText(requireContext(), "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Failed to send SMS.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
 }
