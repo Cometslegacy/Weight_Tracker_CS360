@@ -1,14 +1,21 @@
 package com.zybooks.davidgerardiweighttracker;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -63,6 +70,34 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+
+        //Toggle SMS
+        Button sms_button = view.findViewById(R.id.sms_button);
+        sms_button.setOnClickListener(v -> {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Enable SMS?")
+                    .setMessage("We use SMS to notify you about important updates like hitting your goal.")
+                    .setPositiveButton("Yes", (dialog, which) -> checkSmsPermission())
+                    .setNegativeButton("No", null)
+                    .show();
+        });
+
+
+        return view;
     }
+
+    private static final int SMS_PERMISSION_CODE = 100;
+    private void checkSmsPermission() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                    new String[]{Manifest.permission.SEND_SMS},
+                    SMS_PERMISSION_CODE);
+        } else {
+            // Permission already granted — continue with SMS functionality
+        }
+    }
+
 }
