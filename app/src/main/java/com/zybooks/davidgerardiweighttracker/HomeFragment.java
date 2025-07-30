@@ -4,13 +4,20 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.time.LocalDate;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +30,8 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private AppDatabase db;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -62,8 +71,47 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        db = AppDatabase.getInstance(requireContext());
+
+
+        // Add Weight
+        Button addButton = view.findViewById(R.id.addButton);
+        addButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Enter Today's Weight");
+
+            final EditText input = new EditText(requireContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            builder.setView(input);
+
+            builder.setPositiveButton("Save", (dialog, which) -> {
+                String weightStr = input.getText().toString().trim();
+                if (!weightStr.isEmpty()) {
+                    float weight = Float.parseFloat(weightStr);
+                    String today = LocalDate.now().toString();
+
+                    WeightEntry entry = new WeightEntry();
+                    entry.date = today;
+                    entry.weight = weight;
+
+                    AppDatabase db = AppDatabase.getInstance(requireContext());
+                    db.weightDao().insertWeight(entry);
+
+                    Toast.makeText(requireContext(), "Weight saved!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "No weight entered", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            builder.show();
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return view;
     }
 
 }
