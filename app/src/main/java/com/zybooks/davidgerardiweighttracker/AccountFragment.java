@@ -13,10 +13,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.telephony.SmsManager;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -74,6 +76,8 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
+        setTargetWeight(view);
+
         //Toggle SMS
         Button sms_button = view.findViewById(R.id.sms_button);
         sms_button.setOnClickListener(v -> {
@@ -114,5 +118,34 @@ public class AccountFragment extends Fragment {
             Toast.makeText(requireContext(), "Failed to send SMS.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+    }
+
+    private void setTargetWeight(View view) {
+        Button setTargetButton = view.findViewById(R.id.setTargetButton);
+        setTargetButton.setOnClickListener(v -> {
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+            builder.setTitle("Enter Today's Weight");
+
+            final EditText input = new EditText(requireContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            builder.setView(input);
+
+            builder.setPositiveButton("Save", (dialog, which) -> {
+                String weightStr = input.getText().toString().trim();
+                if (!weightStr.isEmpty()) {
+                    float weight = Float.parseFloat(weightStr);
+                    new Thread(()-> {
+                        AppDatabase db = AppDatabase.getInstance(requireContext());
+                        TargetWeight targetWeight = new TargetWeight(weight);
+                        db.targetDao().setTarget(targetWeight);
+                    }).start();
+
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            builder.show();
+        });
     }
 }

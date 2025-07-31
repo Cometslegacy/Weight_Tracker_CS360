@@ -19,6 +19,9 @@ public interface WeightDao {
     @Query("SELECT * FROM weight_entries WHERE date = :date LIMIT 1")
     WeightEntry getWeightByDate(String date);
 
+    @Query("SELECT * FROM weight_entries ORDER BY id DESC LIMIT 1")
+    WeightEntry getLastEntry();
+
     @Update
     void updateWeight(WeightEntry entry);
 

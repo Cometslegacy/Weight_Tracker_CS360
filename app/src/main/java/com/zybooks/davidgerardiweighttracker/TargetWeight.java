@@ -9,4 +9,13 @@ public class TargetWeight {
     public int id = 1; // singleton
 
     public float target;
+
+    // No-arg constructor required by Room
+    public TargetWeight() {}
+
+    // Constructor with target argument
+    public TargetWeight(float target) {
+        this.id = 1;
+        this.target = target;
+    }
 }

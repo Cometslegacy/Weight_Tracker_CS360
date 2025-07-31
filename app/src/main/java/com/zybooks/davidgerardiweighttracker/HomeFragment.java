@@ -15,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -79,8 +81,18 @@ public class HomeFragment extends Fragment {
 
         db = AppDatabase.getInstance(requireContext());
 
+        AddWeightButton(view);
+        recyclerUpdate(view);
+        updateCurrentWeight(view);
+        updateTargetWeight(view);
 
-        // Add Weight
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    //Functions--------------------------------------------------------------------------------------
+
+    private void AddWeightButton(View view) {
         Button addButton = view.findViewById(R.id.addButton);
         addButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -100,18 +112,15 @@ public class HomeFragment extends Fragment {
                     entry.date = today;
                     entry.weight = weight;
 
-                    //inserts data to database in a new thread
+                    // Insert in background thread
                     new Thread(() -> {
                         AppDatabase db = AppDatabase.getInstance(requireContext());
-
                         db.weightDao().insertWeight(entry);
 
                         requireActivity().runOnUiThread(() -> {
                             refreshRecycler();
                         });
                     }).start();
-
-
 
                     Toast.makeText(requireContext(), "Weight saved!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -123,15 +132,10 @@ public class HomeFragment extends Fragment {
 
             builder.show();
         });
-
-
-        recyclerUpdate(view);
-
-        // Inflate the layout for this fragment
-        return view;
     }
 
-    public void recyclerUpdate(View view) {
+
+    private void recyclerUpdate(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -146,12 +150,45 @@ public class HomeFragment extends Fragment {
         });
 
         recyclerView.setAdapter(adapter);
+        updateCurrentWeight(view);
     }
 
 
-    public void refreshRecycler() {
+    private void refreshRecycler() {
         List<WeightEntry> updatedList = db.weightDao().getAllWeights();
         adapter.setWeightList(updatedList);
+        updateCurrentWeight(getView());
     }
+
+    private void updateCurrentWeight(View view){
+        TextView currentWeightTextView = view.findViewById(R.id.currentWeightText);
+
+        WeightEntry latestEntry = db.weightDao().getLastEntry();
+
+        if (latestEntry != null){
+            String currentWeight = "Current Weight:\n" + latestEntry.weight;
+            currentWeightTextView.setText(currentWeight);
+        }
+        else {
+            currentWeightTextView.setText("Current Weight: \n XXX");
+        }
+
+
+    }
+
+    private void updateTargetWeight(View view) {
+        TextView targetWeightTextview = view.findViewById(R.id.targetWeightText);
+
+        TargetWeight target = db.targetDao().getTarget();
+
+        if (target != null) {
+            String targetWeight = "Target Weight:\n" + target.target;
+            targetWeightTextview.setText(targetWeight);
+        }
+        else {
+            targetWeightTextview.setText("Please set target weight in account settings.");
+        }
+    }
+
 
 }

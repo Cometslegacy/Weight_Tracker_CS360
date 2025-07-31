@@ -5,28 +5,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="24dp"
     tools:context=".AccountFragment">
 
-    <TextView
-        android:id="@+id/textView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_sms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/enable_sms"
-        android:textSize="18sp"
-        android:gravity="center"
+        android:elevation="4dp"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/sms_button"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_sms"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/sms_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_target"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Yes"
-        app:layout_constraintTop_toBottomOf="@id/textView"
+        android:elevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintTop_toBottomOf="@id/card_sms"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textViewSetTarget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Target Weight"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/setTargetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Target Weight"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
