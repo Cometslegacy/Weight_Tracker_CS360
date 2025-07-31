@@ -13,7 +13,7 @@ public interface WeightDao {
     @Insert
     void insertWeight(WeightEntry entry);
 
-    @Query("SELECT * FROM weight_entries ORDER BY date DESC")
+    @Query("SELECT * FROM weight_entries ORDER BY date ASC")
     List<WeightEntry> getAllWeights();
 
     @Query("SELECT * FROM weight_entries WHERE date = :date LIMIT 1")

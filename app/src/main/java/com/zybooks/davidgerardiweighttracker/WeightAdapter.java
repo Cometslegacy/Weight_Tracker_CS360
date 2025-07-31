@@ -3,6 +3,7 @@ package com.zybooks.davidgerardiweighttracker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,9 +14,11 @@ import java.util.List;
 public class WeightAdapter extends RecyclerView.Adapter<WeightAdapter.WeightViewHolder> {
 
     private List<WeightEntry> weightList;
+    private OnDeleteClickListener deleteClickListener;
 
-    public WeightAdapter(List<WeightEntry> weightList) {
+    public WeightAdapter(List<WeightEntry> weightList, OnDeleteClickListener deleteClickListener) {
         this.weightList = weightList;
+        this.deleteClickListener = deleteClickListener;
     }
 
     public void setWeightList(List<WeightEntry> weightList) {
@@ -36,6 +39,12 @@ public class WeightAdapter extends RecyclerView.Adapter<WeightAdapter.WeightView
         WeightEntry entry = weightList.get(position);
         holder.dateText.setText(entry.date);
         holder.weightText.setText(entry.weight + " lbs");
+
+        holder.recyclerDeleteButton.setOnClickListener(v -> {
+            if (deleteClickListener != null) {
+                deleteClickListener.onDeleteClick(entry);
+            }
+        });
     }
 
     @Override
@@ -45,11 +54,17 @@ public class WeightAdapter extends RecyclerView.Adapter<WeightAdapter.WeightView
 
     static class WeightViewHolder extends RecyclerView.ViewHolder {
         TextView dateText, weightText;
+        Button recyclerDeleteButton;
 
         WeightViewHolder(@NonNull View itemView) {
             super(itemView);
             dateText = itemView.findViewById(R.id.dateTextView);
             weightText = itemView.findViewById(R.id.weightTextView);
+            recyclerDeleteButton = itemView.findViewById(R.id.recyclerDeleteItemButton);
         }
+    }
+
+    public interface OnDeleteClickListener {
+        void onDeleteClick(WeightEntry entry);
     }
 }

@@ -100,8 +100,18 @@ public class HomeFragment extends Fragment {
                     entry.date = today;
                     entry.weight = weight;
 
-                    AppDatabase db = AppDatabase.getInstance(requireContext());
-                    db.weightDao().insertWeight(entry);
+                    //inserts data to database in a new thread
+                    new Thread(() -> {
+                        AppDatabase db = AppDatabase.getInstance(requireContext());
+
+                        db.weightDao().insertWeight(entry);
+
+                        requireActivity().runOnUiThread(() -> {
+                            refreshRecycler();
+                        });
+                    }).start();
+
+
 
                     Toast.makeText(requireContext(), "Weight saved!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -114,19 +124,34 @@ public class HomeFragment extends Fragment {
             builder.show();
         });
 
-        //TODO change recycler view to a function to be reused after user enters a new weight so it updates correctly
-        // Recycler View populate
+
+        recyclerUpdate(view);
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    public void recyclerUpdate(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         List<WeightEntry> entries = db.weightDao().getAllWeights();
 
-        adapter = new WeightAdapter(entries);
+        adapter = new WeightAdapter(entries, entry -> {
+            // Run delete in background thread
+            new Thread(() -> {
+                db.weightDao().deleteWeight(entry);
+                requireActivity().runOnUiThread(() -> recyclerUpdate(view));  // refresh after deletion
+            }).start();
+        });
+
         recyclerView.setAdapter(adapter);
+    }
 
 
-        // Inflate the layout for this fragment
-        return view;
+    public void refreshRecycler() {
+        List<WeightEntry> updatedList = db.weightDao().getAllWeights();
+        adapter.setWeightList(updatedList);
     }
 
 }
