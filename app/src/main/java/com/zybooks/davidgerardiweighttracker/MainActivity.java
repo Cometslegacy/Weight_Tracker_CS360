@@ -37,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+
+        //Navigation bar
+        navbar();
+    }
+
+    public void navbar() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
