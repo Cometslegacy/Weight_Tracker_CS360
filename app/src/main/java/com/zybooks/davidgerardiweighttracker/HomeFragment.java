@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +35,7 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private AppDatabase db;
+    private WeightAdapter adapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -109,6 +113,17 @@ public class HomeFragment extends Fragment {
 
             builder.show();
         });
+
+        //TODO change recycler view to a function to be reused after user enters a new weight so it updates correctly
+        // Recycler View populate
+        RecyclerView recyclerView = view.findViewById(R.id.dataRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        List<WeightEntry> entries = db.weightDao().getAllWeights();
+
+        adapter = new WeightAdapter(entries);
+        recyclerView.setAdapter(adapter);
+
 
         // Inflate the layout for this fragment
         return view;
