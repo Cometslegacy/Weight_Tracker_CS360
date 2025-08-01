@@ -7,11 +7,12 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {WeightEntry.class, TargetWeight.class}, version = 1)
+@Database(entities = {WeightEntry.class, TargetWeight.class, LoginAccount.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract WeightDao weightDao();
     public abstract TargetDao targetDao();
+    public abstract LoginAccountDao loginAccountDao();
 
     private static AppDatabase INSTANCE;
 
@@ -20,6 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "weight_tracker_db")
                     .allowMainThreadQueries() //TODO Check if this is useful in production. I think it should be removed at a later date
+                    .fallbackToDestructiveMigration()
                     .build();
         }
         return INSTANCE;

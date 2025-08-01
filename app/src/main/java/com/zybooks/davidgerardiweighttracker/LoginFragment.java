@@ -7,10 +7,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.concurrent.Executors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,19 +77,91 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        Button skipButton = view.findViewById(R.id.skip_button);
-        skipButton.setOnClickListener(v -> {
-            // Start MainActivity
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-
-            // Close the current (Login) activity so user can’t go back
-            requireActivity().finish();
-        });
+        skipLoginButton(view);
+        registerLoginButton(view);
+        loginButton(view);
 
         return view;
     }
 
+    private void goToMainActivity() {
+        // Start MainActivity
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+
+        // Close the current (Login) activity so user can’t go back
+        requireActivity().finish();
+    }
+
+    private void skipLoginButton(View view) {
+        Button skipButton = view.findViewById(R.id.skip_button);
+        skipButton.setOnClickListener(v -> {
+            goToMainActivity();
+        });
+
+    }
+
+    private void registerLoginButton(View view) {
+        Button registerButton = view.findViewById(R.id.register_button);
+        EditText emailInput = view.findViewById(R.id.editTextTextEmailAddress);
+        EditText passwordInput = view.findViewById(R.id.editWebPassword);
+
+
+        registerButton.setOnClickListener(v-> {
+            String email = emailInput.getText().toString().trim();
+            String password = passwordInput.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(view.getContext(), "You must included an Email AND Password to register an account.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            LoginAccount account = new LoginAccount();
+            account.login_email = email;
+            account.login_password = password;
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                AppDatabase db = AppDatabase.getInstance(view.getContext());
+                db.loginAccountDao().insert(account);
+
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    Toast.makeText(view.getContext(),"You have successfully registered your account!", Toast.LENGTH_SHORT).show();
+                    goToMainActivity();
+                });
+            });
+        });
+    }
+
+    private void loginButton(View view) {
+        Button loginButton = view.findViewById(R.id.login_button);
+        EditText emailInput = view.findViewById(R.id.editTextTextEmailAddress);
+        EditText passwordInput = view.findViewById(R.id.editWebPassword);
+
+        loginButton.setOnClickListener(v -> {
+            String email = emailInput.getText().toString().trim();
+            String password = passwordInput.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(view.getContext(), "Please enter your Email AND Password to log in.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                AppDatabase db = AppDatabase.getInstance(view.getContext());
+
+                LoginAccount account = db.loginAccountDao().login(email, password);
+
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (account != null) {
+                        Toast.makeText(view.getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                        goToMainActivity();
+                    } else {
+                        Toast.makeText(view.getContext(), "Invalid email or password.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+    }
 
 
 }
