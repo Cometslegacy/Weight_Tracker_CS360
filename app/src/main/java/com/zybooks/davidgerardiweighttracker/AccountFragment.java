@@ -1,6 +1,7 @@
 package com.zybooks.davidgerardiweighttracker;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -77,9 +78,10 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         setTargetWeight(view);
+        enableSmsButton(view);
 
         //Toggle SMS
-        Button sms_button = view.findViewById(R.id.sms_button);
+/*        Button sms_button = view.findViewById(R.id.sms_button);
         sms_button.setOnClickListener(v -> {
             new AlertDialog.Builder(requireContext())
                     .setTitle("Enable SMS?")
@@ -87,36 +89,42 @@ public class AccountFragment extends Fragment {
                     .setPositiveButton("Yes", (dialog, which) -> checkSmsPermission())
                     .setNegativeButton("No", null)
                     .show();
-        });
+        });*/
 
 
         return view;
     }
 
-    private static final int SMS_PERMISSION_CODE = 100;
-    private void checkSmsPermission() {
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
+    public void enableSmsButton(View view) {
+        Button enableSmsButton = view.findViewById(R.id.sms_button);
+        enableSmsButton.setOnClickListener((v -> {
+            checkSmsPersmission();
+        }));
+    }
 
-            requestPermissions(
-                    new String[]{Manifest.permission.SEND_SMS},
-                    SMS_PERMISSION_CODE);
-            sendSms("1234567890", "SMS Enabled!");
+    private void checkSmsPersmission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) requireContext(), new String[]{Manifest.permission.SEND_SMS}, 0);
         } else {
-            // Permission already granted — continue with SMS functionality
+            sendSms();
         }
     }
 
     //TODO SMS verification
     //This doesnt seem to be working, come back later.
-    private void sendSms(String phoneNumber, String message) {
+    private void sendSms() {
+
+        EditText phoneText = getView().findViewById(R.id.editTextPhone);
+        String phoneNumber = String.valueOf(phoneText.getText());
+
+        String message = "This is an example of an SMS sent to number: " + phoneNumber;
+
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-            Toast.makeText(requireContext(), "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "SMS Sent to: " + phoneNumber, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Failed to send SMS.", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            Toast.makeText(requireContext(), "SMS Failed to Send", Toast.LENGTH_SHORT).show();
         }
     }
 

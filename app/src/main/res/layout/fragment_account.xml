@@ -35,12 +35,22 @@
                 android:textAlignment="center"
                 android:gravity="center"/>
 
+            <EditText
+                android:id="@+id/editTextPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="123-456-7890"
+                android:gravity="center"
+                android:inputType="phone" />
+
             <Button
                 android:id="@+id/sms_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"
-                android:layout_marginTop="16dp"/>
+                android:text="Enable"
+                android:layout_marginTop="16dp" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -69,6 +79,8 @@
                 android:textSize="18sp"
                 android:textAlignment="center"
                 android:gravity="center"/>
+
+
 
             <Button
                 android:id="@+id/setTargetButton"
