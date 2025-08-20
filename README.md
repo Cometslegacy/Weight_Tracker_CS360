@@ -5,7 +5,11 @@ This project’s goal was to create a basic Android application that helps users
 
 - Store entered weights in a database  
 - Track progress toward a target weight  
-- Log in with a local account or continue as a guest  
+- Log in with a local account or continue as a guest
+- <img width="557" height="1248" alt="image" src="https://github.com/user-attachments/assets/6892f3b9-414c-4579-bd15-c63b641cab80" /> <img width="560" height="1247" alt="image" src="https://github.com/user-attachments/assets/bc1878b4-6a08-4c9c-bb8c-7ee4c4b40e3e" /> <img width="553" height="1248" alt="image" src="https://github.com/user-attachments/assets/c7784057-ee35-4b36-bf92-607472263224" />
+
+
+
 
 ## User Needs & UI Design  
 The app was designed with a user-centered approach, focusing on simplicity and ease of use.  
