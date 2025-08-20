@@ -1,13 +1,42 @@
+# Weight Tracker App  
 
-    Briefly summarize the requirements and goals of the app you developed. What user needs was this app designed to address?
-      This project's goal was to create a basic android application that can help users track their weight and hit a target weight goal. We needed to be able to store currently entered weights into a database and allow users to have a basic login function, or continue as a guest. 
-    What screens and features were necessary to support user needs and produce a user-centered UI for the app? How did your UI designs keep users in mind? Why were your designs successful?
-      Our first screen is the log-in screen. WHere the user can create a account locally and sign in, or continue as a guest. Then we needed the main screen, which allowed useres to see their target weight, current weight, and a list of previously entered weights to track their progress. We also included a very basic settings screen where users can enable SMS notifications for when their target weight is reached, and changing/updating their target weight
-    How did you approach the process of coding your app? What techniques or strategies did you use? How could those techniques or strategies be applied in the future?
-      I started by designing the UI on paper, then using androidstudio to replicate what I had drawn. I then started to code each function screen by screen. Trying to keep thing simple and easy to follow incase I had to come back later.
-    How did you test to ensure your code was functional? Why is this process important, and what did it reveal?
-      I tested the code by running the app in an emulator and testing the functionallity of the things I created.
-    Consider the full app design and development process from initial planning to finalization. Where did you have to innovate to overcome a challenge?
-      WHen it came to the database to store information, initially we were prompted to use SQLite, but when reading the documentation I saw that it was not recommended to use that, and instead use "Rooms" which are built in to android and are an abstraction layer around SQLite. Since the documentation said to use rooms, I decided to give it a try.
-    In what specific component of your mobile app were you particularly successful in demonstrating your knowledge, skills, and experience?
-      The creation of the database, I feel especially proud of that because I feel like it was a very elegant solution and does exactly what it needs to do, and has the ability to be expanded to include more things if desired.
+## Overview  
+This project’s goal was to create a basic Android application that helps users track their weight and reach a target weight goal. The app allows users to:  
+
+- Store entered weights in a database  
+- Track progress toward a target weight  
+- Log in with a local account or continue as a guest  
+
+## User Needs & UI Design  
+The app was designed with a user-centered approach, focusing on simplicity and ease of use.  
+
+**Screens and Features:**  
+- **Login Screen** – Users can create a local account, log in, or continue as a guest  
+- **Main Screen** – Displays target weight, current weight, and a history of previously entered weights  
+- **Settings Screen** – Allows users to enable SMS notifications for reaching their target weight and update their target goal  
+
+The UI was intentionally kept straightforward so users could focus on tracking progress without unnecessary distractions.  
+
+## Development Approach  
+- Began with paper sketches to plan the UI layout  
+- Implemented screens in Android Studio based on those sketches  
+- Built functionality screen by screen to keep the code organized and easy to revisit  
+- Maintained a simple, modular structure to support future maintainability  
+
+These strategies can be applied in future projects to improve clarity, structure, and adaptability.  
+
+## Testing  
+- Used the Android emulator to test functionality across screens  
+- Verified login, weight entry, progress tracking, and settings behavior  
+- Testing was critical for catching small issues early and confirming that the app worked as intended  
+
+## Challenges and Innovation  
+One major challenge was implementing the database. While SQLite was initially considered, the Android documentation recommended using Room, an abstraction layer over SQLite that simplifies database management. By adopting Room, the app gained cleaner code, better maintainability, and more flexibility for future expansion.  
+
+## Successes  
+The database implementation with Room was a standout success. It provided an elegant solution that not only met the project’s requirements but also left room for future feature expansion. This component highlighted strong problem-solving skills and adaptability to industry best practices.  
+
+## Installation and Usage  
+1. Clone this repository  
+2. Open in Android Studio  
+3. Build and run on an emulator or physical device  
